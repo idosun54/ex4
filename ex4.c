@@ -274,12 +274,21 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 
 
 void task1ReversePhraseImplementation(){
-
+    int p=getchar();
+    if(p=='\n'){
+      printf("The reversed phrase is:\n");
+      return;
+    }
+    task1ReversePhraseImplementation();
+    printf("%c", p);
 }
 
 
 int task2CheckPalindromeImplementation(int length)
-{
+{   
+    
+
+
     return 0;
 }
 
