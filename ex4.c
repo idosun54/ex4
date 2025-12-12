@@ -285,10 +285,26 @@ void task1ReversePhraseImplementation(){
 
 
 int task2CheckPalindromeImplementation(int length)
-{   
-    
+{   int p1, p2;
+    p1=getchar();
+    if(length-2==0)
+    {
+        p2=getchar();
+        if(p2==p1)
+         return 1;
+        return 0;
+    }
+    else if(length-1==0) {
+     return 1;
+    }
 
-
+    else if(task2CheckPalindromeImplementation(length-2))
+    {
+       int p2=getchar();
+       if(p1==p2)
+        return 1;
+    }
+    getchar();
     return 0;
 }
 
