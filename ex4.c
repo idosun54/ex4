@@ -58,6 +58,7 @@ int task5SolveSudokuImplementation(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
+int task3Help(int, char[][LONGEST_TERM+1]);
 
 
 
@@ -268,6 +269,13 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
     }
 }
 
+int task3Help(int i, char terms[][LONGEST_TERM+1])
+{
+    if(terms[i][0]!='\0')
+     task3Help(i+1, terms);
+ return i;
+}
+
 /***************************
 *********** TODO ***********
 ****************************/
@@ -311,9 +319,57 @@ int task2CheckPalindromeImplementation(int length)
 
 void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int subjectsCount,
                                             char verbs[][LONGEST_TERM+1], int verbsCount,
-                                            char objects[][LONGEST_TERM+1], int objectsCount){
+                                            char objects[][LONGEST_TERM+1], int objectsCount)
+{
+char arr[LONGEST_SENTENCE+1]={};
+
+   
+    if(objectsCount>0){
+    strcat(arr, subjects[subjectsCount-1]);
+    strcat(arr, " ");
+    strcat(arr, verbs[verbsCount-1]);
+    strcat(arr, " ");
+    strcat(arr, objects[objectsCount-1]);
+    printf("%s\n", arr);
+    task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount-1);
+    }
+
+     if(objectsCount==0){
+     objectsCount=task3Help(objectsCount, objects)+1;
+     verbsCount--;
+    }
+
+     if(verbsCount>0)
+    {
+    strcat(arr, subjects[subjectsCount-1]);
+    strcat(arr, " ");
+    strcat(arr, verbs[verbsCount-1]);
+    strcat(arr, " ");
+    strcat(arr, objects[objectsCount-1]);
+    printf("%s\n", arr);
+    task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount-1, objects, objectsCount);
+    }
+    
+    if(verbsCount==0){
+    verbsCount=task3Help(verbsCount, verbs)+1;
+    subjectsCount--;
+    }
+
+    if(subjectsCount>0)
+    {
+    strcat(arr, subjects[subjectsCount-1]);
+    strcat(arr, " ");
+    strcat(arr, verbs[verbsCount-1]);
+    strcat(arr, " ");
+    strcat(arr, objects[objectsCount-1]);
+    printf("%s\n", arr);
+    task3GenerateSentencesImplementation(subjects, subjectsCount-1, verbs, verbsCount, objects, objectsCount);
+    }
+
+ return;
 
 }
+
 
 
 int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
