@@ -322,52 +322,43 @@ void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int s
                                             char objects[][LONGEST_TERM+1], int objectsCount)
 {
 char arr[LONGEST_SENTENCE+1]={};
+     int i=0;
+     int j=0;
+     int k=0;
+     
+     if(subjectsCount>1){
+        task3GenerateSentencesImplementation(subjects, subjectsCount-1, verbs, verbsCount, objects, objectsCount);
+          strcat(arr, subjects[subjectsCount-1]);
+          strcat(arr, " ");
+          strcat(arr, verbs[verbsCount-1]);
+          strcat(arr, " ");
+          strcat(arr, objects[objectsCount-1]);
+          printf("%s\n", arr);
+      }
 
-   
-    if(objectsCount>0){
-    strcat(arr, subjects[subjectsCount-1]);
-    strcat(arr, " ");
-    strcat(arr, verbs[verbsCount-1]);
-    strcat(arr, " ");
-    strcat(arr, objects[objectsCount-1]);
-    printf("%s\n", arr);
-    task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount-1);
-    }
+      if(verbsCount>1){
+        task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount-1, objects, objectsCount);
+      }
 
-     if(objectsCount==0){
-     objectsCount=task3Help(objectsCount, objects)+1;
-     verbsCount--;
-    }
+      if(objectsCount>1){
+       task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount-1);
+          strcat(arr, subjects[subjectsCount-1]);
+          strcat(arr, " ");
+          strcat(arr, verbs[verbsCount-1]);
+          strcat(arr, " ");
+          strcat(arr, objects[objectsCount-1]);
+          printf("%s\n", arr);
+      }
+     if(objectsCount==1&&subjectsCount==1&&verbsCount==1){
+          strcat(arr, subjects[subjectsCount-1]);
+          strcat(arr, " ");
+          strcat(arr, verbs[verbsCount-1]);
+          strcat(arr, " ");
+          strcat(arr, objects[objectsCount-1]);
+          printf("%s\n", arr);
+        }
 
-     if(verbsCount>0)
-    {
-    strcat(arr, subjects[subjectsCount-1]);
-    strcat(arr, " ");
-    strcat(arr, verbs[verbsCount-1]);
-    strcat(arr, " ");
-    strcat(arr, objects[objectsCount-1]);
-    printf("%s\n", arr);
-    task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount-1, objects, objectsCount);
-    }
-    
-    if(verbsCount==0){
-    verbsCount=task3Help(verbsCount, verbs)+1;
-    subjectsCount--;
-    }
-
-    if(subjectsCount>0)
-    {
-    strcat(arr, subjects[subjectsCount-1]);
-    strcat(arr, " ");
-    strcat(arr, verbs[verbsCount-1]);
-    strcat(arr, " ");
-    strcat(arr, objects[objectsCount-1]);
-    printf("%s\n", arr);
-    task3GenerateSentencesImplementation(subjects, subjectsCount-1, verbs, verbsCount, objects, objectsCount);
-    }
-
- return;
-
+          return;
 }
 
 
