@@ -271,9 +271,10 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 
 int task3Help(int i, char terms[][LONGEST_TERM+1])
 {
-    if(terms[i][0]!='\0')
-     task3Help(i+1, terms);
- return i;
+    if((terms[i][0]!='\0')&&(i<MAX_NUMBER_OF_TERMS))
+     i= task3Help(i+1, terms);
+
+  return i;
 }
 
 /***************************
@@ -323,41 +324,57 @@ void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int s
 {
 char arr[LONGEST_SENTENCE+1]={};
      int i=0;
-     int j=0;
      int k=0;
-     
-     if(subjectsCount>1){
-        task3GenerateSentencesImplementation(subjects, subjectsCount-1, verbs, verbsCount, objects, objectsCount);
+        
+        if(objectsCount>1){
+           strcat(arr, subjects[subjectsCount-1]);
+           strcat(arr, " ");
+           strcat(arr, verbs[verbsCount-1]);
+           strcat(arr, " ");
+           strcat(arr, objects[objectsCount-1]);
+          task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount-1);
+          k++;
+         }
+
+        if(verbsCount>1&&k==0){
           strcat(arr, subjects[subjectsCount-1]);
           strcat(arr, " ");
           strcat(arr, verbs[verbsCount-1]);
           strcat(arr, " ");
           strcat(arr, objects[objectsCount-1]);
-          printf("%s\n", arr);
-      }
 
-      if(verbsCount>1){
-        task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount-1, objects, objectsCount);
-      }
+           if(objectsCount==1){
+            objectsCount=task3Help(objectsCount-1, objects);
+          }
+          task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount-1, objects, objectsCount);
+          i++;
+         }
+          
+        if(subjectsCount>1&&i==0&&k==0){
+           strcat(arr, subjects[subjectsCount-1]);
+           strcat(arr, " ");
+           strcat(arr, verbs[verbsCount-1]);
+           strcat(arr, " ");
+           strcat(arr, objects[objectsCount-1]);
+           if(objectsCount==1){
+            objectsCount=task3Help(objectsCount-1, objects);
+            }
+           if(verbsCount==1){
+            verbsCount=task3Help(verbsCount-1, verbs);
+            }
+           task3GenerateSentencesImplementation(subjects, subjectsCount-1, verbs, verbsCount, objects, objectsCount);
+          }
 
-      if(objectsCount>1){
-       task3GenerateSentencesImplementation(subjects, subjectsCount, verbs, verbsCount, objects, objectsCount-1);
-          strcat(arr, subjects[subjectsCount-1]);
-          strcat(arr, " ");
-          strcat(arr, verbs[verbsCount-1]);
-          strcat(arr, " ");
-          strcat(arr, objects[objectsCount-1]);
-          printf("%s\n", arr);
-      }
-     if(objectsCount==1&&subjectsCount==1&&verbsCount==1){
-          strcat(arr, subjects[subjectsCount-1]);
-          strcat(arr, " ");
-          strcat(arr, verbs[verbsCount-1]);
-          strcat(arr, " ");
-          strcat(arr, objects[objectsCount-1]);
-          printf("%s\n", arr);
-        }
+         if(subjectsCount==1&&objectsCount==1&&verbsCount==1)
+         { 
+           strcat(arr, subjects[subjectsCount-1]);
+           strcat(arr, " ");
+           strcat(arr, verbs[verbsCount-1]);
+           strcat(arr, " ");
+           strcat(arr, objects[objectsCount-1]);
+         }
 
+          printf("%s\n", arr);
           return;
 }
 
