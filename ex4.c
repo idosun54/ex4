@@ -384,6 +384,58 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                                     int size, int startR, int startC, int highest)
 {
+ if(1){
+    if(startR>0)
+    { 
+        if(board[startR-1][startC]==board[startR][startC]+1)
+        {
+         solution[startR-1][startC]=board[startR-1][startC];
+         task4SolveZipBoardImplementation(board ,solution ,size, startR-1, startC, highest);
+        } 
+        if(board[startR-1][startC]==0)
+         task4SolveZipBoardImplementation(board ,solution ,size, startR-1, startC, highest);
+    }
+
+    if(startR<size)
+    { 
+        if(board[startR+1][startC]==board[startR][startC]+1)
+        {
+         solution[startR+1][startC]=board[startR+1][startC];
+         task4SolveZipBoardImplementation(board ,solution ,size, startR+1, startC, highest);
+        }
+        if(board[startR+1][startC]==0)
+         task4SolveZipBoardImplementation(board ,solution ,size, startR+1, startC, highest);
+    }
+    
+    if(startC>0)
+    { 
+        if(board[startR][startC-1]==board[startR][startC]+1)
+        {
+         solution[startR][startC-1]=board[startR][startC-1];
+         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC-1, highest);
+        }
+        if(board[startR][startC-1]==0)
+         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC-1, highest);
+    }
+
+    if(startR<size)
+    { 
+        if(board[startR][startC+1]==board[startR][startC]+1)
+        {
+         solution[startR][startC+1]=board[startR][startC+1];
+         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC+1, highest);
+        }
+         
+        if(board[startR][startC+1]==0)
+         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC+1, highest);
+    }
+   if(board[startR][startC]!=highest)
+     return 0;
+   }
+
+   if(board[startR][startC]==highest)
+    printf("%s", solution);
+
     return 0;
 }
 
