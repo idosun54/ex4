@@ -59,6 +59,7 @@ int task5SolveSudokuImplementation(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 int task3Help(int, char[][LONGEST_TERM+1]);
+int task4HelpBoardFull(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int , int , int);
 
 
 
@@ -277,6 +278,21 @@ int task3Help(int i, char terms[][LONGEST_TERM+1])
   return i;
 }
 
+int task4HelpBoardFull(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int size, int rows, int cols)
+{
+   if(rows<size)
+    {
+   if(cols<size){
+    if(board[rows][cols]!=0)
+     task4HelpBoardFull(board, size, rows, cols+1);
+    return 0;
+   }
+   task4HelpBoardFull(board, size, rows+1, cols);
+   return 0;
+}
+ return 1;
+}
+
 /***************************
 *********** TODO ***********
 ****************************/
@@ -384,59 +400,108 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                                     int size, int startR, int startC, int highest)
 {
- if(1){
-    if(startR>0)
-    { 
-        if(board[startR-1][startC]==board[startR][startC]+1)
+ if(!task4HelpBoardFull(board, size, 0, 0)){
+   if(startR>0)
+     { 
+         if(board[startR-1][startC]==board[startR][startC]+1)
         {
-         solution[startR-1][startC]=board[startR-1][startC];
+         solution[startR-1][startC]='U';
          task4SolveZipBoardImplementation(board ,solution ,size, startR-1, startC, highest);
+         
         } 
-        if(board[startR-1][startC]==0)
-         task4SolveZipBoardImplementation(board ,solution ,size, startR-1, startC, highest);
-    }
+      }
 
-    if(startR<size)
+   if(startR<size)
     { 
         if(board[startR+1][startC]==board[startR][startC]+1)
         {
-         solution[startR+1][startC]=board[startR+1][startC];
+         solution[startR+1][startC]='D';
          task4SolveZipBoardImplementation(board ,solution ,size, startR+1, startC, highest);
-        }
-        if(board[startR+1][startC]==0)
-         task4SolveZipBoardImplementation(board ,solution ,size, startR+1, startC, highest);
+         
+        } 
+         
     }
-    
-    if(startC>0)
+  if(startC>0)
     { 
         if(board[startR][startC-1]==board[startR][startC]+1)
         {
-         solution[startR][startC-1]=board[startR][startC-1];
+         solution[startR][startC-1]='L';
          task4SolveZipBoardImplementation(board ,solution ,size, startR, startC-1, highest);
+         
         }
-        if(board[startR][startC-1]==0)
-         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC-1, highest);
     }
 
     if(startR<size)
     { 
         if(board[startR][startC+1]==board[startR][startC]+1)
         {
-         solution[startR][startC+1]=board[startR][startC+1];
+         solution[startR][startC+1]='R';
          task4SolveZipBoardImplementation(board ,solution ,size, startR, startC+1, highest);
+
         }
-         
-        if(board[startR][startC+1]==0)
-         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC+1, highest);
     }
-   if(board[startR][startC]!=highest)
-     return 0;
    }
 
-   if(board[startR][startC]==highest)
-    printf("%s", solution);
+   if(!task4HelpBoardFull(board, size, 0, 0)){
+    
+    if(startR>0)
+    {  
+        if(board[startR-1][startC]==0)
+        {
+          board[startR-1][startC]=board[startR][startC];
+          task4SolveZipBoardImplementation(board ,solution ,size, startR-1, startC, highest);
 
-    return 0;
+        }
+    }
+
+    if(startR<size)
+    { 
+        if(board[startR+1][startC]==0)
+        {
+         board[startR+1][startC]=board[startR][startC];
+         task4SolveZipBoardImplementation(board ,solution ,size, startR+1, startC, highest);
+    
+        }
+    }
+    
+    if(startC>0)
+    { 
+        if(board[startR][startC-1]==0)
+        {
+          board[startR][startC-1]=board[startR][startC];
+          task4SolveZipBoardImplementation(board ,solution ,size, startR, startC-1, highest);
+          
+        }
+        
+    }
+
+    if(startR<size)
+    { 
+        if(board[startR][startC+1]==0)
+        {
+         board[startR][startC+1]=board[startR][startC];
+         task4SolveZipBoardImplementation(board ,solution ,size, startR, startC+1, highest);
+    
+        }   
+    }
+   }
+ 
+ 
+ if(board[startR][startC]==highest){
+
+ int i,j;
+ for (i = 0; i < size; i++) {
+  for (j = 0; j < size; j++) {
+    printf("%c\n", solution[i][j]);
+  }
+ }
+
+
+ return 1;
+ }
+  
+   
+ return 0;
 }
 
 
