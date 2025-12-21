@@ -270,6 +270,7 @@ void printSudoku(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
     }
 }
 
+//Returns the number of terms in a given array
 int task3Help(int i, char terms[][LONGEST_TERM+1])
 {
     if((terms[i][0]!='\0')&&(i<MAX_NUMBER_OF_TERMS))
@@ -278,6 +279,7 @@ int task3Help(int i, char terms[][LONGEST_TERM+1])
   return i;
 }
 
+//Checks if zip board is full
 int task4HelpBoardFull(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int size, int rows, int cols)
 {
   {
@@ -296,6 +298,47 @@ int task4HelpBoardFull(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int size
 }
 }
 
+int task5CanPlace(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c, int num, int i, int j, int b)
+{
+   if(board[r][i]==num)
+    return 0;
+   if(i<SUDOKU_GRID_SIZE-1)
+    task5CanPlace(board, r, c, num, i++, j, b);
+   
+   if(board[j][c]==num)
+    return 0;
+   if(j<SUDOKU_GRID_SIZE-1)
+    task5CanPlace(board, r, c, num, i, j, b);
+   
+   int startRow = r - r % SUDOKU_SUBGRID_SIZE;
+   int startCol = c - c % SUDOKU_SUBGRID_SIZE;
+   int boxR = b / SUDOKU_SUBGRID_SIZE; 
+   int boxC = b % SUDOKU_SUBGRID_SIZE; 
+
+   if(board[startRow+boxR][startCol+boxC]==num)
+    return 0;
+   if(b<SUDOKU_GRID_SIZE-1)
+    task5CanPlace(board, r, c, num, i, j, b++);
+  
+   return 1;
+
+}
+
+void task5PlaceNum(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c, int num)
+{
+   if(board[r][c]==0)
+     if(task5CanPlace(board, r, c, num, 0, 0, 0))
+      board[r][c]=num;
+  if(num<SUDOKU_GRID_SIZE)
+   task5PlaceNum(board, r, c, num+1);
+
+  if(r<SUDOKU_GRID_SIZE-1){
+   if(c<SUDOKU_GRID_SIZE-1)
+    task5PlaceNum(board, r, c+1, 0);
+  task5PlaceNum(board, r+1, 0, 0);
+}
+ 
+}
 /***************************
 *********** TODO ***********
 ****************************/
@@ -403,6 +446,7 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
                                     char solution[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE],
                                     int size, int startR, int startC, int highest)
 {
+    //checks if board is filled correctly
     if (board[startR][startC]==highest) 
     {
         if (task4HelpBoardFull(board, size, 0, 0)) {
@@ -490,12 +534,13 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
 
 int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 {
-  
+
+    task5PlaceNum(board, 1, 0, 0);
+  return 1;
 
 
 
-
-
+ 
 
 
 
