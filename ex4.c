@@ -407,7 +407,8 @@ void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int s
 char arr[LONGEST_SENTENCE+1]={};
      int i=0;
      int k=0;
-
+    
+     //Logic for the count
     int totalSub = task3Help(0, subjects);
     int totalVerb = task3Help(0, verbs);
     int totalObj = task3Help(0, objects);
