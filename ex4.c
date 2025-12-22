@@ -60,6 +60,9 @@ int readTerms(char[][LONGEST_TERM+1], int, char[]);
 void printSudoku(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE]);
 int task3Help(int, char[][LONGEST_TERM+1]);
 int task4HelpBoardFull(int[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int , int , int);
+int task5CanPlace(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int , int , int , int);
+int task5TryNum(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int , int , int);
+int task5Helper(int[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int , int);
 
 
 
@@ -298,47 +301,64 @@ int task4HelpBoardFull(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_SIZE], int size
 }
 }
 
-int task5CanPlace(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c, int num, int i, int j, int b)
+//Checks if placement is legal
+int task5CanPlace(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c, int num, int i) 
 {
-   if(board[r][i]==num)
-    return 0;
-   if(i<SUDOKU_GRID_SIZE-1)
-    task5CanPlace(board, r, c, num, i++, j, b);
-   
-   if(board[j][c]==num)
-    return 0;
-   if(j<SUDOKU_GRID_SIZE-1)
-    task5CanPlace(board, r, c, num, i, j, b);
-   
-   int startRow = r - r % SUDOKU_SUBGRID_SIZE;
-   int startCol = c - c % SUDOKU_SUBGRID_SIZE;
-   int boxR = b / SUDOKU_SUBGRID_SIZE; 
-   int boxC = b % SUDOKU_SUBGRID_SIZE; 
+    if (i==SUDOKU_GRID_SIZE) 
+        return 1;
 
-   if(board[startRow+boxR][startCol+boxC]==num)
-    return 0;
-   if(b<SUDOKU_GRID_SIZE-1)
-    task5CanPlace(board, r, c, num, i, j, b++);
-  
-   return 1;
+    if (board[r][i]==num) 
+     return 0;
 
+
+    if (board[i][c]==num) 
+     return 0;
+
+    
+    int startRow = r - (r%SUDOKU_SUBGRID_SIZE);
+    int startCol = c - (c%SUDOKU_SUBGRID_SIZE);
+    if (board[startRow+(i/SUDOKU_SUBGRID_SIZE)][startCol +(i%SUDOKU_SUBGRID_SIZE)]==num) 
+        return 0;
+
+    return task5CanPlace(board, r, c, num, i + 1);
 }
 
-void task5PlaceNum(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c, int num)
+//Places num on board
+int task5TryNum(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c, int num) 
 {
-   if(board[r][c]==0)
-     if(task5CanPlace(board, r, c, num, 0, 0, 0))
-      board[r][c]=num;
-  if(num<SUDOKU_GRID_SIZE)
-   task5PlaceNum(board, r, c, num+1);
+    
+    if (num>9) 
+     return 0; 
+    
 
-  if(r<SUDOKU_GRID_SIZE-1){
-   if(c<SUDOKU_GRID_SIZE-1)
-    task5PlaceNum(board, r, c+1, 0);
-  task5PlaceNum(board, r+1, 0, 0);
+    if (task5CanPlace(board, r, c, num, 0)) 
+    {
+      board[r][c]=num; 
+      if (task5SolveSudokuImplementation(board))
+       return 1;
+        
+      board[r][c] = 0;
+    }
+
+    return task5TryNum(board, r, c, num+1);
 }
- 
+
+//Ties everything together
+int task5Helper(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE], int r, int c)
+{
+   if (c==SUDOKU_GRID_SIZE) {
+    return task5Helper(board, r+1, 0);
+   }
+    if (r==SUDOKU_GRID_SIZE) 
+     return 1;
+    
+
+    if (board[r][c]!=0) 
+     return task5Helper(board, r, c+1);
+    
+    return task5TryNum(board, r, c, 1);
 }
+
 /***************************
 *********** TODO ***********
 ****************************/
@@ -387,7 +407,18 @@ void task3GenerateSentencesImplementation(char subjects[][LONGEST_TERM+1], int s
 char arr[LONGEST_SENTENCE+1]={};
      int i=0;
      int k=0;
-        
+
+    int totalSub = task3Help(0, subjects);
+    int totalVerb = task3Help(0, verbs);
+    int totalObj = task3Help(0, objects);
+   
+    int tempSub = totalSub - subjectsCount; 
+    int tempVerb = totalVerb - verbsCount;
+    int tempObj = totalObj - objectsCount;
+
+    int fakeCount = (tempSub * totalVerb * totalObj) + (tempVerb * totalObj) + (tempObj + 1);
+    int count = (totalSub * totalVerb * totalObj) - fakeCount + 1;
+
         if(objectsCount>1){
            strcat(arr, subjects[subjectsCount-1]);
            strcat(arr, " ");
@@ -436,6 +467,7 @@ char arr[LONGEST_SENTENCE+1]={};
            strcat(arr, objects[objectsCount-1]);
          }
 
+          printf("%d. ", count);
           printf("%s\n", arr);
           return;
 }
@@ -534,15 +566,8 @@ int task4SolveZipBoardImplementation(int board[ZIP_MAX_GRID_SIZE][ZIP_MAX_GRID_S
 
 int task5SolveSudokuImplementation(int board[SUDOKU_GRID_SIZE][SUDOKU_GRID_SIZE])
 {
+  if(task5Helper(board, 0, 0))
+    return 1;
 
-    task5PlaceNum(board, 1, 0, 0);
-  return 1;
-
-
-
- 
-
-
-
-    return 0;
+  return 0;
 }
